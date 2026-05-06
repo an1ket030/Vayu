@@ -9,3 +9,5 @@ __pycache__/
 *.pyc
 out*.json
 test_delhi.json
+prmpt.txt
+vayu_stitch_prompt.txt
