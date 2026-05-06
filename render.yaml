@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: cleanair-backend
+    env: node
+    region: singapore
+    plan: free
+    rootDir: backend
+    buildCommand: npm install && npm run prisma:generate && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false
+      - key: REDIS_URL
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: ML_SERVICE_URL
+        fromService:
+          name: cleanair-ml
+          type: web
+          envVarKey: RENDER_EXTERNAL_URL
+
+  - type: web
+    name: cleanair-ml
+    env: docker
+    region: singapore
+    plan: free
+    rootDir: ml-service
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: PORT
+        value: 8000

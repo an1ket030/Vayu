@@ -1,0 +1,11 @@
+node_modules/
+.env
+.env.*
+!.env.example
+dist/
+build/
+.DS_Store
+__pycache__/
+*.pyc
+out*.json
+test_delhi.json

@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  name         String?
+  createdAt    DateTime      @default(now())
+  exposureLogs ExposureLog[]
+  savedRoutes  SavedRoute[]
+}
+
+model AQIReading {
+  id          String   @id @default(uuid())
+  stationId   String
+  stationName String
+  lat         Float
+  lon         Float
+  aqi         Int
+  pm25        Float?
+  pm10        Float?
+  no2         Float?
+  o3          Float?
+  co          Float?
+  so2         Float?
+  wind        Float?
+  humidity    Float?
+  temperature Float?
+  recordedAt  DateTime
+  createdAt   DateTime @default(now())
+
+  @@index([stationId, recordedAt])
+  @@index([lat, lon])
+}
+
+model ExposureLog {
+  id          String   @id @default(uuid())
+  userId      String?
+  lat         Float
+  lon         Float
+  aqi         Int
+  category    String
+  durationSec Int
+  recordedAt  DateTime
+  user        User?    @relation(fields: [userId], references: [id])
+
+  @@index([userId, recordedAt])
+}
+
+model ForecastReading {
+  id             String   @id @default(uuid())
+  stationId      String
+  predictedAQI   Float
+  confidenceLow  Float
+  confidenceHigh Float
+  forecastFor    DateTime
+  generatedAt    DateTime @default(now())
+
+  @@index([stationId, forecastFor])
+}
+
+model SavedRoute {
+  id           String   @id @default(uuid())
+  userId       String
+  originName   String
+  destName     String
+  routeGeoJSON Json
+  avgAQI       Float
+  exposureDose Float
+  createdAt    DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id])
+}

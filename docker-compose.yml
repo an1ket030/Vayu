@@ -1,0 +1,98 @@
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: cleanair-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: cleanair
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - cleanair-net
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: cleanair-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - cleanair-net
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: cleanair-backend
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/cleanair
+      - REDIS_URL=redis://redis:6379
+      - ML_SERVICE_URL=http://cleanair-ml:8000
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - cleanair-net
+
+  ml-service:
+    build:
+      context: ./ml-service
+      dockerfile: Dockerfile
+    container_name: cleanair-ml
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./ml-service:/app
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    networks:
+      - cleanair-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: cleanair-frontend
+    ports:
+      - "5173:5173"
+    env_file:
+      - .env
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - cleanair-net
+
+networks:
+  cleanair-net:
+    driver: bridge
+
+volumes:
+  postgres_data:

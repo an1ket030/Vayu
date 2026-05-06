@@ -1,0 +1,97 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Vayu Scientific Minimalism - Deep Space Theme */
+    --background: 210 23% 7%; /* #0f1418 */
+    --foreground: 210 20% 90%; /* #dee3e8 */
+    
+    --card: 210 23% 7%; /* #0f1418 */
+    --card-foreground: 210 20% 90%; /* #dee3e8 */
+    
+    --popover: 206 18% 11%; /* #171c20 */
+    --popover-foreground: 210 20% 90%; /* #dee3e8 */
+    
+    --primary: 200 93% 60%; /* #38bdf8 - Sky Blue */
+    --primary-foreground: 197 100% 15%; /* #00354a */
+    
+    --secondary: 205 54% 77%; /* #a4cce6 */
+    --secondary-foreground: 200 95% 15%; /* #023449 */
+    
+    --muted: 205 18% 22%; /* #303539 */
+    --muted-foreground: 205 20% 75%; /* #bdc8d1 */
+    
+    --accent: 200 93% 60%; /* #38bdf8 */
+    --accent-foreground: 197 100% 15%; /* #00354a */
+    
+    --destructive: 3 100% 83%; /* #ffb4ab */
+    --destructive-foreground: 3 100% 21%; /* #690005 */
+
+    --border: 212 31% 22%; /* #253347 (approx) */
+    --input: 212 31% 22%; /* #253347 */
+    --ring: 200 93% 60%; /* #38bdf8 */
+    
+    --radius: 0.5rem; /* 8px */
+
+    /* Custom Data Colors */
+    --surface: 210 23% 7%; /* #0f1418 */
+    --surface-dim: 210 23% 7%; /* #0f1418 */
+    --surface-bright: 204 9% 22%; /* #343a3e */
+    --surface-container-lowest: 200 29% 5%; /* #0a0f12 */
+    --surface-container-low: 206 18% 11%; /* #171c20 */
+    --surface-container: 206 14% 12%; /* #1b2024 */
+    --surface-container-high: 206 11% 16%; /* #252b2e */
+    --surface-container-highest: 206 8% 20%; /* #303539 */
+  }
+
+  /* Force dark mode styling */
+  .dark {
+    /* Identical to :root since this is a dark-only theme */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground antialiased font-sans;
+    /* 4px rhythmic grid base */
+  }
+}
+
+@layer utilities {
+  .glass-panel {
+    @apply bg-surface-container/80 backdrop-blur-[16px] border border-white/5 shadow-2xl;
+  }
+  
+  .data-card {
+    @apply bg-surface-dim border border-border rounded-2xl shadow-inner overflow-hidden relative;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  .data-card::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none;
+  }
+
+  .glow-primary {
+    box-shadow: 0 0 20px 0 hsl(var(--primary) / 0.5);
+  }
+
+  .glow-primary-hover:hover {
+    box-shadow: 0 0 20px 0 hsl(var(--primary) / 0.8);
+  }
+
+  .radial-glow-bg {
+    @apply relative z-0;
+  }
+
+  .radial-glow-bg::before {
+    content: '';
+    @apply absolute inset-0 z-[-1] pointer-events-none rounded-full opacity-15 blur-3xl;
+    background: radial-gradient(circle, hsl(var(--primary)) 0%, transparent 70%);
+  }
+}
