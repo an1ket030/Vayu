@@ -40,4 +40,5 @@ services:
     name: cleanair-redis
     region: singapore
     plan: free
+    ipAllowList: []
     maxmemoryPolicy: noeviction
