@@ -24,6 +24,14 @@ services:
           name: cleanair-ml
           type: web
           envVarKey: RENDER_EXTERNAL_URL
+      - key: WAQI_TOKEN
+        sync: false
+      - key: OWM_API_KEY
+        sync: false
+      - key: ORS_API_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
 
   - type: web
     name: cleanair-ml
