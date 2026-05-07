@@ -20,15 +20,25 @@ import { forecastUpdateQueue } from './jobs/forecastUpdater.job';
 
 const app = express();
 const httpServer = createServer(app);
+const ALLOWED_ORIGINS = [
+  'http://localhost:5173',
+  'http://localhost:4000',
+  'https://vayuair.web.app',
+  'https://vayuair.firebaseapp.com',
+];
+
 const io = new Server(httpServer, {
   cors: {
-    origin: '*', // Tighten for production
+    origin: ALLOWED_ORIGINS,
     methods: ['GET', 'POST'],
   },
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ALLOWED_ORIGINS,
+  credentials: true,
+}));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(rateLimiter);
