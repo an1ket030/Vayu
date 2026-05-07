@@ -47,6 +47,8 @@ services:
     envVars:
       - key: PORT
         value: 8000
+      - key: OWM_API_KEY
+        sync: false
 
   - type: redis
     name: cleanair-redis
